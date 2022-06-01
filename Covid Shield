@@ -1,0 +1,49 @@
+#include <LiquidCrystal.h> // includes the LiquidCrystal Library
+LiquidCrystal lcd(1, 2, 3, 4, 5, 6); // Creates an LCD object. Parameters: (rs, enable, d4, d5, d6, d7) 
+const int trigPin = 13;
+const int echoPin = 12;
+const int buzzer = 11;
+const int ledPin = 9;
+long duration;
+int distance,safetyDistance;
+void setup() {
+analogWrite(10,125);
+lcd.begin(16,2); // Initializes the interface to the LCD screen, and specifies the dimensions (width and height) of the display
+pinMode(trigPin, OUTPUT);
+pinMode(echoPin, INPUT);
+pinMode(buzzer, OUTPUT);
+pinMode(ledPin, OUTPUT);
+}
+void loop() {
+digitalWrite(trigPin, LOW);
+delayMicroseconds(2);
+digitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);
+duration = pulseIn(echoPin, HIGH);
+distance= duration*0.034/2;
+safetyDistance = distance;
+if (safetyDistance <= 122) //Enter the Distance 
+{ 
+  digitalWrite(buzzer, HIGH);
+  lcd.clear();
+  lcd.print("Warning!");
+  lcd.setCursor(0,1);
+  lcd.print("Distance: ");
+  lcd.print(distance);
+  lcd.print(" Cm");
+  digitalWrite(ledPin, HIGH);
+ 
+}
+else{
+  digitalWrite(buzzer, LOW);
+  lcd.clear();
+  lcd.print("You are safe");
+  lcd.setCursor(0,1);
+  lcd.print("Distance: ");
+  lcd.print(distance);
+  lcd.print(" Cm");
+  digitalWrite(ledPin, LOW);
+}
+delay(1000);
+}     
